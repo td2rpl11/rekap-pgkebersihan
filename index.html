@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Checklist Kebersihan Toilet</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar no-print">
+  <h1>Checklist Kebersihan Toilet</h1>
+  <div class="roles" role="tablist">
+    <button id="tabOb" class="role active" type="button">Sisi OB</button>
+    <button id="tabSup" class="role" type="button">Sisi Supervisor</button>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- Pilihan umum -->
+  <section class="card no-print">
+    <div class="grid g4">
+      <label>Lokasi
+        <select id="lokasi">
+          <option value="wanita">Toilet Wanita</option>
+          <option value="pria">Toilet Pria</option>
+        </select>
+      </label>
+      <label>Bulan
+        <select id="bulan"></select>
+      </label>
+      <label>Tahun
+        <input type="number" id="tahun" min="2020" max="2100">
+      </label>
+      <div class="btn-col">
+        <button id="btnCetak" class="btn primary" type="button">Cetak / Simpan PDF</button>
+      </div>
+    </div>
+    <p class="hint" id="hintCetak"></p>
+  </section>
+
+  <!-- Sisi OB -->
+  <section class="card ob-only no-print" id="panelOb">
+    <h2>Isi Checklist</h2>
+    <div class="grid g2">
+      <label>PIN (6 digit)
+        <input type="password" id="pinOb" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="••••••">
+      </label>
+      <div class="btn-col" style="align-self:end">
+        <button id="btnPin" class="btn primary" type="button">Masuk</button>
+      </div>
+    </div>
+    <p class="msg" id="msgPin" role="status"></p>
+
+    <div id="obForm" hidden>
+      <h3 id="namaOb"></h3>
+      <label>Tanggal membersihkan
+        <input type="date" id="tanggal">
+      </label>
+      <div class="items" id="items"></div>
+      <div class="row-actions">
+        <button id="btnSemuaBersih" class="btn" type="button">Tandai semua bersih</button>
+        <button id="btnSimpanOb" class="btn primary" type="button">Simpan</button>
+      </div>
+      <p class="msg" id="msgOb" role="status"></p>
+    </div>
+  </section>
+
+  <!-- Sisi Supervisor -->
+  <section class="card sup-only no-print" id="panelSup" hidden>
+    <h2>Data Formulir (Supervisor)</h2>
+    <div class="grid g3">
+      <label>No Formulir
+        <input type="text" id="noForm" placeholder="mis. FM/TU-05">
+      </label>
+      <label>Revisi
+        <input type="text" id="revisi" placeholder="0">
+      </label>
+      <label>Tanggal terbit
+        <input type="date" id="tglTerbit">
+      </label>
+      <label>Penanggung jawab
+        <input type="text" id="pj" autocomplete="off" placeholder="Ketik nama">
+      </label>
+      <label>Ketua Tim Kerja, TU, dan RT
+        <input type="text" id="ketua" autocomplete="off" placeholder="Ketik nama">
+      </label>
+    </div>
+
+    <h3>Daftar nama petugas</h3>
+    <div class="add-row">
+      <input type="text" id="namaBaru" placeholder="Nama petugas baru">
+      <button id="btnTambah" class="btn" type="button">Tambah</button>
+    </div>
+    <ul class="chips" id="chips"></ul>
+    <p class="hint">Klik tombol "PIN" di samping nama untuk membuat atau mereset PIN petugas. PIN hanya tampil sekali.</p>
+
+    <h3>Koreksi data</h3>
+    <p class="hint">Klik kotak pada tabel di bawah untuk mengubah: kosong → o (bersih) → x (kotor) → kosong.</p>
+    <button id="btnHapusBulan" class="btn danger" type="button">Kosongkan data bulan ini</button>
+  </section>
+
+  <p class="hint no-print">Data tersimpan di server dan bisa dilihat dari perangkat mana pun.</p>
+
+  <!-- Lembar formulir (area cetak) -->
+  <div class="sheet-scroll">
+    <div class="sheet" id="sheet">
+
+      <div class="hdr">
+        <div class="hdr-logo">
+          <img src="logo.png" alt="" onerror="this.style.display='none'">
+          <div>Pusat Perakitan dan Modernisasi Pertanian<br>Tanaman Pangan</div>
+        </div>
+        <div class="hdr-title">
+          <div class="fm">FORMULIR MUTU</div>
+          <div class="jd">CHEKLIST KEBERSIHAN TOILET</div>
+        </div>
+        <table class="hdr-meta">
+          <tr><td>No Formulir</td><td>Revisi</td></tr>
+          <tr><td id="vNoForm" class="b"></td><td id="vRevisi" class="b"></td></tr>
+          <tr><td>Halaman</td><td>Tgl Terbit</td></tr>
+          <tr><td class="b">1</td><td id="vTgl" class="b"></td></tr>
+        </table>
+      </div>
+
+      <div class="info">
+        <div class="info-l">
+          <div><span class="k">LOKASI</span><span class="c">:</span><span id="vLokasi" class="v"></span></div>
+        </div>
+        <div class="info-m">
+          <div><span class="k">BULAN</span><span class="c">:</span><span id="vBulan" class="v"></span></div>
+          <div><span class="k">TAHUN</span><span class="c">:</span><span id="vTahun" class="v"></span></div>
+        </div>
+        <div class="info-r">
+          <div><span class="k">o</span><span class="c">:</span>Bersih</div>
+          <div><span class="k">x</span><span class="c">:</span>Kotor (langsung dibersihkan)</div>
+        </div>
+      </div>
+
+      <table class="grid-table" id="tbl"></table>
+
+      <div class="sign">
+        <div>
+          <div class="role-name">Petugas</div>
+          <div class="space"></div>
+          <div class="name" id="vPetugas"></div>
+        </div>
+        <div>
+          <div class="role-name">Penanggung Jawab</div>
+          <div class="space"></div>
+          <div class="name" id="vPj"></div>
+        </div>
+        <div>
+          <div class="role-name">Ketua Tim Kerja, TU, dan RT</div>
+          <div class="space"></div>
+          <div class="name" id="vKetua"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="script.js"></script>
+</body>
+</html>
